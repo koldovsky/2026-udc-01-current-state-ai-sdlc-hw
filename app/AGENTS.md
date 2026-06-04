@@ -24,4 +24,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 1. **Never modify `package.json` or install dependencies** without explicit user approval — version mismatches in this stack break silently.
 2. **Never add `"use client"` to a file that does data fetching** — mixing client boundary with async data access causes runtime errors in Next.js 16.
 3. **Never write raw SQL or call external APIs directly from a component** — side effects belong in Server Actions (`app/actions/`) or Route Handlers (`app/api/`).
+
+## Testing
+
+- Use `npm test` from the `app/` folder to run unit tests.
+- The project uses Vitest for lightweight unit test execution.
 <!-- END:nextjs-agent-rules -->
