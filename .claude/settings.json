@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm install)",
+      "Bash(git *)"
+    ],
+    "deny": [
+      "Read(node_modules/**)",
+      "Write(node_modules/**)",
+      "Read(app/node_modules/**)",
+      "Write(app/node_modules/**)",
+      "Read(app/.next/**)",
+      "Write(app/.next/**)",
+      "Read(.next/**)",
+      "Write(.next/**)",
+      "Read(dist/**)",
+      "Write(dist/**)",
+      "Read(build/**)",
+      "Write(build/**)",
+      "Read(coverage/**)",
+      "Write(coverage/**)",
+      "Write(*.lock)",
+      "Write(pnpm-lock.yaml)",
+      "Write(yarn.lock)",
+      "Write(package-lock.json)",
+      "Read(.env)",
+      "Write(.env)",
+      "Read(.env.local)",
+      "Write(.env.local)",
+      "Read(.env.*.local)",
+      "Write(.env.*.local)",
+      "Write(.DS_Store)",
+      "Write(*.log)"
+    ]
+  },
+  "docs": {
+    "enabled": true
+  }
+}
