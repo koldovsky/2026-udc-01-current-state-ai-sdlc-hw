@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getRobotById } from "@/data/robots";
+import type { RobotDetailPageProps } from "@/types";
 
 const difficultyColors = {
   easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
@@ -9,11 +10,7 @@ const difficultyColors = {
   hard: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
 };
 
-export default async function RobotDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function RobotDetailPage({ params }: RobotDetailPageProps) {
   const { id } = await params;
   const robot = getRobotById(id);
 

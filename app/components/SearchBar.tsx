@@ -1,12 +1,19 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import type { SearchBarProps } from "@/types";
 
-export default function SearchBar({ defaultValue }: { defaultValue?: string }) {
+export default function SearchBar({ defaultValue }: SearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -17,7 +24,7 @@ export default function SearchBar({ defaultValue }: { defaultValue?: string }) {
       } else {
         params.delete("q");
       }
-      router.push(`/robots?${params.toString()}`);
+      router.replace(`/robots?${params.toString()}`);
     }, 300);
   }
 

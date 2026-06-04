@@ -1,8 +1,10 @@
+export type Material = "PLA" | "PETG" | "TPU";
+
 export interface Part {
   id: string;
   name: string;
   quantity: number;
-  material: string;
+  material: Material;
   printTime: string;
 }
 
@@ -15,4 +17,20 @@ export interface Robot {
   buildTime: string;
   instructions: string[];
   parts: Part[];
+}
+
+export interface RobotDetailPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export interface PartsPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export interface RobotsPageProps {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export interface SearchBarProps {
+  defaultValue?: string;
 }

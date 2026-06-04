@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 import { robots } from "@/data/robots";
 import SearchBar from "@/components/SearchBar";
+import type { RobotsPageProps } from "@/types";
 
 const difficultyColors = {
   easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
@@ -10,11 +11,7 @@ const difficultyColors = {
   hard: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
 };
 
-export default async function RobotsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
+export default async function RobotsPage({ searchParams }: RobotsPageProps) {
   const { q } = await searchParams;
   const query = q?.toLowerCase() ?? "";
 

@@ -1,18 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getRobotById } from "@/data/robots";
+import type { Material, PartsPageProps } from "@/types";
 
-const materialColors: Record<string, string> = {
+const materialColors: Record<Material, string> = {
   PLA: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
   PETG: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
   TPU: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
 };
 
-export default async function PartsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function PartsPage({ params }: PartsPageProps) {
   const { id } = await params;
   const robot = getRobotById(id);
 

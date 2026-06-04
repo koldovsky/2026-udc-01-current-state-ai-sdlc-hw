@@ -75,4 +75,4 @@ The extra cost came from generating a `NavBar` component, editing `layout.tsx`, 
 | Add `/about` + NavBar | $0.39 | +161 |
 | **Total** | **$0.54** | **+274** |
 
-Vague prompt → cheap. Detailed prompt with multiple requirements → 2.6× more. Actuyal result of first prompt is generic and mostly not usable(no navigation etc.). Second one costs more, but has more predictable result.
+Vague prompt → cheap. Detailed prompt with multiple requirements → 2.6× more. Actual result of first prompt is generic and mostly not usable(no navigation etc.). Second one costs more, but has more predictable result.
