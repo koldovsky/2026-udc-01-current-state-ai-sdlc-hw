@@ -15,5 +15,5 @@ interface Serial {
 }
 
 interface Navigator {
-  readonly serial: Serial;
+  readonly serial?: Serial;
 }

@@ -110,10 +110,11 @@ export function Controls({
 
         <button
           onClick={onToggleRecord}
+          disabled={!connected && !recording}
           className={`rounded-md px-4 py-2 text-sm font-semibold transition ${
             recording
               ? 'bg-amber text-black hover:brightness-110'
-              : 'border border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+              : 'border border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-40'
           }`}
         >
           {recording ? 'Stop recording' : 'Start recording'}

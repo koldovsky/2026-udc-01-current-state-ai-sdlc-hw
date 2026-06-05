@@ -58,6 +58,15 @@ export function useSerial(onReadings: (readings: Reading[]) => void) {
         readerRef.current = null;
       }
     }
+
+    // If the loop exited because the device disconnected (not via disconnect()),
+    // reset session state so connect() is not permanently blocked.
+    if (keepReadingRef.current && portRef.current === port) {
+      keepReadingRef.current = false;
+      portRef.current = null;
+      port.close().catch(() => {}); // best-effort; device may have already gone
+      setStatus('disconnected');
+    }
   }, []);
 
   const connect = useCallback(
@@ -67,18 +76,24 @@ export function useSerial(onReadings: (readings: Reading[]) => void) {
         return;
       }
       if (keepReadingRef.current) return; // already connected or connecting
+      const serial = navigator.serial;
+      if (!serial) return; // narrowing for TS; isSupported() already guarantees this
       keepReadingRef.current = true; // claim the slot before any await
       try {
         setError(null);
         setStatus('connecting');
-        const port = await navigator.serial.requestPort();
+        const port = await serial.requestPort();
         await port.open({ baudRate });
         portRef.current = port;
         setStatus('connected');
         void readLoop(port); // fire-and-forget; loop ends on disconnect
       } catch (e) {
         keepReadingRef.current = false;
-        setError(e instanceof Error ? e.message : String(e));
+        const msg = e instanceof Error ? e.message : String(e);
+        // User dismissed the port picker — not an error worth surfacing.
+        if (!msg.includes('No port selected')) {
+          setError(msg);
+        }
         setStatus('disconnected');
       }
     },
@@ -105,8 +120,17 @@ export function useSerial(onReadings: (readings: Reading[]) => void) {
   useEffect(() => {
     return () => {
       keepReadingRef.current = false;
-      readerRef.current?.cancel().catch(() => {});
-      portRef.current?.close().catch(() => {});
+      const reader = readerRef.current;
+      const port = portRef.current;
+      if (reader) {
+        // Must wait for cancel() to resolve before close(): cancel() causes the
+        // pending read() to complete, which schedules releaseLock() as a microtask.
+        // Calling close() synchronously (before that microtask runs) throws
+        // "Cannot close a port with an active reader" and silently leaks the port.
+        reader.cancel().catch(() => {}).finally(() => port?.close().catch(() => {}));
+      } else {
+        port?.close().catch(() => {});
+      }
     };
   }, []);
 

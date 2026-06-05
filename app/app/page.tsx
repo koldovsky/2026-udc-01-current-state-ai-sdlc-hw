@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { DigitalDisplay } from '@/components/DigitalDisplay';
 import { RealtimeChart, type ChartPoint } from '@/components/RealtimeChart';
 import { Controls } from '@/components/Controls';
@@ -17,7 +17,7 @@ const toFinite = (s: string): number | null => {
 };
 
 export default function Home() {
-  const [baud, setBaud] = useState(9600);
+  const [baud, setBaud] = useState(115200);
   const [current, setCurrent] = useState<Reading | null>(null);
   const [recording, setRecording] = useState(false);
   const [trigger, setTrigger] = useState(false);
@@ -105,6 +105,11 @@ export default function Home() {
   );
 
   const { status, error, connect, disconnect } = useSerial(handleReadings);
+
+  // Stop recording automatically when the device disconnects.
+  useEffect(() => {
+    if (status !== 'connected') setRec(false);
+  }, [status, setRec]);
 
   const handleConnect = useCallback(() => connect(baud), [connect, baud]);
   const handleToggleRecord = useCallback(() => setRec(!recordingRef.current), [setRec]);
