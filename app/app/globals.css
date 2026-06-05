@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Lab-bench palette: neon green + amber accents generate text-/bg-/border- utils. */
+@theme {
+  --color-accent: #39ff14;
+  --color-amber: #ffbf00;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #070b07;
+  --foreground: #d1fae5;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
