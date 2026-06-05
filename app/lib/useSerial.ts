@@ -49,7 +49,10 @@ export function useSerial(onReadings: (readings: Reading[]) => void) {
           }
         }
       } catch (e) {
-        setError(e instanceof Error ? e.message : String(e));
+        // Suppress the AbortError thrown by reader.cancel() during a normal disconnect.
+        if (keepReadingRef.current) {
+          setError(e instanceof Error ? e.message : String(e));
+        }
       } finally {
         reader.releaseLock();
         readerRef.current = null;
@@ -63,16 +66,18 @@ export function useSerial(onReadings: (readings: Reading[]) => void) {
         setStatus('unsupported');
         return;
       }
+      if (keepReadingRef.current) return; // already connected or connecting
+      keepReadingRef.current = true; // claim the slot before any await
       try {
         setError(null);
         setStatus('connecting');
         const port = await navigator.serial.requestPort();
         await port.open({ baudRate });
         portRef.current = port;
-        keepReadingRef.current = true;
         setStatus('connected');
         void readLoop(port); // fire-and-forget; loop ends on disconnect
       } catch (e) {
+        keepReadingRef.current = false;
         setError(e instanceof Error ? e.message : String(e));
         setStatus('disconnected');
       }

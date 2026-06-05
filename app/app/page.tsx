@@ -9,6 +9,13 @@ import { useSerial } from '@/lib/useSerial';
 
 const MAX_CHART_POINTS = 300;
 
+// Returns null for empty string or non-finite values (e.g. '-' or '.' mid-typing).
+const toFinite = (s: string): number | null => {
+  if (s === '') return null;
+  const n = Number.parseFloat(s);
+  return Number.isFinite(n) ? n : null;
+};
+
 export default function Home() {
   const [baud, setBaud] = useState(9600);
   const [current, setCurrent] = useState<Reading | null>(null);
@@ -45,6 +52,7 @@ export default function Home() {
     (readings: Reading[]) => {
       setCurrent(readings[readings.length - 1]);
 
+      const newPoints: ChartPoint[] = [];
       for (const r of readings) {
         const { baseValue, baseUnit } = normalizeReading(r);
 
@@ -55,6 +63,7 @@ export default function Home() {
           unitRef.current = baseUnit;
           setChartUnit(baseUnit);
           flushSession();
+          newPoints.length = 0; // discard pre-flush points from this batch
         }
 
         // Trigger: arm recording automatically on threshold crossing.
@@ -65,8 +74,8 @@ export default function Home() {
 
         if (recordingRef.current) {
           recordedRef.current.push(r);
-          const rMin = rangeMin !== '' ? Number.parseFloat(rangeMin) : null;
-          const rMax = rangeMax !== '' ? Number.parseFloat(rangeMax) : null;
+          const rMin = toFinite(rangeMin);
+          const rMax = toFinite(rangeMax);
           const oor =
             baseValue !== null &&
             ((rMin !== null && baseValue < rMin) || (rMax !== null && baseValue > rMax));
@@ -77,13 +86,17 @@ export default function Home() {
             if (rMax !== null && baseValue > rMax) chartV = rMax;
             else if (rMin !== null && baseValue < rMin) chartV = rMin;
           }
-          const point: ChartPoint = { t: new Date(r.ts).toLocaleTimeString(), v: chartV, oor };
-          setChartPoints((prev) => {
-            const next = prev.length >= MAX_CHART_POINTS ? prev.slice(1) : prev.slice();
-            next.push(point);
-            return next;
-          });
+          newPoints.push({ t: new Date(r.ts).toLocaleTimeString(), v: chartV, oor });
         }
+      }
+
+      if (newPoints.length > 0) {
+        setChartPoints((prev) => {
+          const combined = [...prev, ...newPoints];
+          return combined.length > MAX_CHART_POINTS
+            ? combined.slice(combined.length - MAX_CHART_POINTS)
+            : combined;
+        });
       }
 
       if (recordingRef.current) setRecordedCount(recordedRef.current.length);
@@ -148,8 +161,8 @@ export default function Home() {
           <RealtimeChart
             data={chartPoints}
             unit={chartUnit}
-            yMin={rangeMin !== '' ? Number.parseFloat(rangeMin) : undefined}
-            yMax={rangeMax !== '' ? Number.parseFloat(rangeMax) : undefined}
+            yMin={toFinite(rangeMin) ?? undefined}
+            yMax={toFinite(rangeMax) ?? undefined}
           />
           <p className="font-mono text-xs text-zinc-600">
             {recordedCount} samples recorded

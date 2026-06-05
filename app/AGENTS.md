@@ -82,3 +82,15 @@ Hooks:
 ├── parser (stateful, handles chunked serial stream)
 └── All components consume shared state via closure
 ```
+
+## Conventions
+
+- **Client-only**: all components that use browser APIs must have `'use client'` at the top; never call `navigator.serial` or `document` in RSC or shared utils.
+- **State vs refs**: use `useRef` for values that must be read synchronously inside async callbacks (e.g. `recordingRef`, `keepReadingRef`); use `useState` only for values that drive re-renders.
+- **Typed units**: always work in base SI units internally (`baseValue` / `baseUnit` from `normalizeReading`); raw device values stay in `recordedRef` for CSV export only.
+
+## Guardrails
+
+- **Do not** add a server-side data layer or API routes — this is a pure client app; Web Serial is browser-only and cannot be proxied server-side.
+- **Do not** call `setChartPoints` (or any other `setState`) inside a per-sample loop; batch into a single state update at the end of the readings callback to avoid O(N) array copies.
+- **No test runner configured** — `npm run test` does not exist in `package.json`; do not assume tests can be run.
