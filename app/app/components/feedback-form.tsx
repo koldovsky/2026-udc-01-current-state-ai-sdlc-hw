@@ -92,6 +92,7 @@ export default function FeedbackForm() {
 
       router.push("/thank-you");
     } catch {
+      console.error('Feedback submission failed:', err);
       setSubmitError("Something went wrong. Please try again.");
       setSubmitting(false);
     }
