@@ -31,3 +31,9 @@ yarn-error.log*
 
 # Windows Git Bash safety: prevent accidental NUL device files
 nul
+
+# Copilot working context (local only)
+Copilot-processing.md
+
+# Repomix output (generated for token analysis)
+repomix-output.xml
