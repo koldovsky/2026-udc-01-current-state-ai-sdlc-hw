@@ -1,0 +1,34 @@
+
+
+post task 1
+
+    caude-haiku-4-5:  459 input, 15 output, 0 cache read, 0 cache write ($0.0005)
+    claude-opus-4-7:  540 input, 6.5k output, 648.0k cache read, 37.4k cache write ($0.72)
+
+post task 2
+
+    claude-haiku-4-5:  1.1k input, 1.5k output, 70.3k cache read, 13.7k cache write ($0.0329)
+    claude-opus-4-7:  572 input, 27.1k output, 2.1m cache read, 69.2k cache write ($2.16)
+
+task 3 start
+   Usage by model:
+       claude-haiku-4-5:  1.1k input, 1.5k output, 70.3k cache read, 13.7k cache write ($0.0329)
+        claude-opus-4-7:  572 input, 27.1k output, 2.1m cache read, 69.2k cache write ($2.16)
+
+p1 use sonnet to add dragging an area
+Usage by model:
+     claude-haiku-4-5:  1.5k input, 1.6k output, 70.3k cache read, 13.7k cache write ($0.0335)
+        claude-opus-4-7:  572 input, 27.1k output, 2.1m cache read, 69.2k cache write ($2.16)
+      claude-sonnet-4-6:  364 input, 5.4k output, 585.4k cache read, 24.4k cache write ($0.3497)
+
+p2 use opus to add scale by mouse scroll
+ Usage by model:
+     claude-haiku-4-5:  2.0k input, 1.6k output, 70.3k cache read, 13.7k cache write ($0.0340)
+        claude-opus-4-7:  598 input, 31.6k output, 2.7m cache read, 91.4k cache write ($2.73)
+      claude-sonnet-4-6:  364 input, 5.4k output, 585.4k cache read, 24.4k cache write ($0.3497)
+
+
+takeaways:
+    sonnet is fine for this type of work
+    when claude asks to build a playwright container to mess around in the browser, tell it to skip
+
