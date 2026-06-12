@@ -1,0 +1,27 @@
+# Keep heavy / generated / secret files out of the AI context (Task 1)
+
+# Dependencies
+node_modules/
+app/node_modules/
+
+# Builds & caches
+.next/
+app/.next/
+dist/
+build/
+out/
+coverage/
+
+# Lock files (large, low-signal)
+package-lock.json
+app/package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Secrets / env
+.env
+.env.*
+*.pem
+
+# Logs
+*.log
