@@ -38,7 +38,9 @@ const PAGE_MODULES = {
   settings: () => import('./pages/settings'),
 } as const
 
-const Page = await PAGE_MODULES[pageName]()
+const loadPage = PAGE_MODULES[pageName as keyof typeof PAGE_MODULES]
+if (!loadPage) throw new Error(`Unknown page: ${pageName}`)
+const Page = await loadPage()
 ```
 
 ### File-System Paths

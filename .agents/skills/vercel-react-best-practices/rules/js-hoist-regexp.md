@@ -22,6 +22,12 @@ function Highlighter({ text, query }: Props) {
 **Correct (memoize or hoist):**
 
 ```tsx
+// Escape user input before interpolating into a RegExp to avoid
+// broken patterns and ReDoS from untrusted characters.
+function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function Highlighter({ text, query }: Props) {

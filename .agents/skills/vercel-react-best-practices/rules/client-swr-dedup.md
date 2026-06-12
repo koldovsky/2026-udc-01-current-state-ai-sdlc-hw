@@ -35,7 +35,7 @@ function UserList() {
 **For immutable data:**
 
 ```tsx
-import { useImmutableSWR } from '@/lib/swr'
+import useImmutableSWR from 'swr/immutable'
 
 function StaticContent() {
   const { data } = useImmutableSWR('/api/config', fetcher)
@@ -45,7 +45,7 @@ function StaticContent() {
 **For mutations:**
 
 ```tsx
-import { useSWRMutation } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 function UpdateButton() {
   const { trigger } = useSWRMutation('/api/user', updateUser)

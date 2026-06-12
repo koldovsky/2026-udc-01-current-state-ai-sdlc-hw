@@ -26,3 +26,5 @@ const [user, posts, comments] = await Promise.all([
   fetchComments()
 ])
 ```
+
+> **Fail-fast warning:** `Promise.all()` rejects as soon as any input promise rejects, and the other results are discarded. Prefer it only when the operations are truly independent *and* you want all-or-nothing fail-fast behavior. When the operations must tolerate partial failure, use `Promise.allSettled()` (inspect each `status`) or wrap each call (`fetchUser()`, `fetchPosts()`, `fetchComments()`) in its own try/catch / per-promise error handling so one failure does not drop the successful results.

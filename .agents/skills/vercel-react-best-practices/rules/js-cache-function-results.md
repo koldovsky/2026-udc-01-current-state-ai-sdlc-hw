@@ -9,6 +9,8 @@ tags: javascript, cache, memoization, performance
 
 Use a module-level Map to cache function results when the same function is called repeatedly with the same inputs during render.
 
+> **Scope guard:** A module-level Map cache is only safe for deterministic, non-user-specific computations (like `slugify`), or when the module runs exclusively in client-side code. Do not use it for per-user or request-scoped data in server/runtime-shared modules: server module scope is process-wide, so the cache would leak across users and requests. Restrict such caches to client components (e.g., a `"use client"` module) or guard them behind a `typeof window !== 'undefined'` runtime check. See `server-no-shared-module-state`.
+
 **Incorrect (redundant computation):**
 
 ```typescript

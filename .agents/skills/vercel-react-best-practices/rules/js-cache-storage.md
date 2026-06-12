@@ -46,7 +46,12 @@ let cookieCache: Record<string, string> | null = null
 function getCookie(name: string) {
   if (!cookieCache) {
     cookieCache = Object.fromEntries(
-      document.cookie.split('; ').map(c => c.split('='))
+      document.cookie.split('; ').map(c => {
+        const eq = c.indexOf('=')
+        const name = c.slice(0, eq)
+        const value = decodeURIComponent(c.slice(eq + 1))
+        return [name, value]
+      })
     )
   }
   return cookieCache[name]
