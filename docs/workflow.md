@@ -37,6 +37,21 @@
 
 ## 3. Review & Verification
 
+### Plan → Agent Workflow
+This deliverable was built in two distinct modes:
+1. **Plan Mode** — Architecture and data model were designed upfront (see Section 1). Components, types, and core rules were agreed upon before any code was written.
+2. **Agent Mode** — Implementation was carried out iteratively (see Section 2): initial build in Iteration 1, then a targeted discount-feature refactor in Iteration 2.
+
+### Acceptance Criteria
+The feature is accepted when all of the following conditions are met:
+* Balance is calculated as `Incomes − Expenses + Discount Amounts` and updates in real time.
+* Adding an income or expense with `amount > 0` persists the transaction to `localStorage` and updates the balance immediately.
+* The discount checkbox/input is only available for expense transactions; `discountAmount` must satisfy `0 <= discountAmount <= amount`.
+* Deleting a transaction removes it from `localStorage` and recalculates the balance correctly.
+* Income rows display in green with a `+` prefix; expense rows in red with a `−` prefix; discounted expenses show the discount amount in blue with a `+` prefix and 🏷 label.
+* The form submit button is disabled for all invalid inputs (empty label, non-positive amount, out-of-range discount).
+* No TypeScript errors and no ESLint warnings (`npm run build` exits with code 0).
+
 ### Diff Review Checklist
 * `use client` directive placed correctly.
 * Form button state disabled for all invalid inputs.
@@ -47,3 +62,8 @@
 * Headless Playwright tests passed successfully.
 * State, colors, and balance recalculation verified on row deletion.
 * Production build (`npm run build`) passed with zero errors.
+
+### Corrections Made During Review
+* Updated `app/AGENTS.md` framework version from v15.x to v16.x to match the installed `next@16.2.7`.
+* Replaced hardcoded `font-family: Arial, Helvetica, sans-serif` in `globals.css` with `var(--font-geist-sans)` so the Geist font injected by `layout.tsx` is actually applied.
+* Updated `metadata` in `app/layout.tsx` from the create-next-app defaults to Finance Tracker–specific title and description.

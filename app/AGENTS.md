@@ -1,7 +1,7 @@
 # Agent Instructions & Project Context
 
 ## 🛠 Tech Stack & Versions
-- **Framework**: Next.js v15.x (App Router)
+- **Framework**: Next.js v16.x (App Router)
 - **Library**: React v19.x
 - **Language**: TypeScript v5.x
 - **Styling**: Tailwind CSS v4.x
