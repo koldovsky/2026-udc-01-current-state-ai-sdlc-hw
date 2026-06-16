@@ -1,0 +1,35 @@
+﻿# Dependencies
+node_modules/
+**/node_modules/
+
+# Builds
+.next/
+**/.next/
+dist/
+build/
+out/
+
+# Env / secrets — NEVER commit these
+.env
+.env.*
+
+# Lock files (large, low signal for agents)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Editor / OS
+.DS_Store
+*.local
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Logs / caches
+*.log
+.cache/
+.turbo/
+
+# Repomix artifacts (large, not needed in AI context)
+repomix-output.xml
+repomix-*.xml

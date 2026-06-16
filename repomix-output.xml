@@ -1,0 +1,447 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+[hooks]/
+  useNotes.ts
+
+[components]/
+  NoteForm.tsx
+  NoteItem.tsx
+  NoteList.tsx
+  NotesApp.tsx
+
+[types]/
+  note.ts
+
+[app]/
+  favicon.ico
+  globals.css
+  layout.tsx
+  page.tsx
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="useNotes.ts">
+"use client";
+
+import { useCallback, useSyncExternalStore } from "react";
+import { NOTES_STORAGE_KEY, type Note } from "@/types/note";
+
+function parseNotes(raw: string | null): Note[] {
+  if (!raw) return [];
+
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(
+      (item): item is Note =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof item.id === "string" &&
+        typeof item.text === "string" &&
+        typeof item.createdAt === "number",
+    );
+  } catch {
+    return [];
+  }
+}
+
+let notesCache: Note[] | null = null;
+const listeners = new Set<() => void>();
+const EMPTY_NOTES: Note[] = [];
+
+function getSnapshot(): Note[] {
+  if (typeof window !== "undefined" && notesCache === null) {
+    notesCache = parseNotes(localStorage.getItem(NOTES_STORAGE_KEY));
+  }
+
+  return notesCache ?? EMPTY_NOTES;
+}
+
+function getServerSnapshot(): Note[] {
+  return EMPTY_NOTES;
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function persist(nextNotes: Note[]) {
+  notesCache = nextNotes;
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(nextNotes));
+  }
+
+  listeners.forEach((listener) => listener());
+}
+
+export function useNotes() {
+  const notes = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  const addNote = useCallback((text: string): boolean => {
+    const trimmed = text.trim();
+    if (!trimmed) return false;
+
+    persist([
+      ...getSnapshot(),
+      { id: crypto.randomUUID(), text: trimmed, createdAt: Date.now() },
+    ]);
+    return true;
+  }, []);
+
+  const updateNote = useCallback((id: string, text: string): boolean => {
+    const trimmed = text.trim();
+    if (!trimmed) return false;
+
+    persist(
+      getSnapshot().map((note) =>
+        note.id === id ? { ...note, text: trimmed } : note,
+      ),
+    );
+    return true;
+  }, []);
+
+  const deleteNote = useCallback((id: string) => {
+    persist(getSnapshot().filter((note) => note.id !== id));
+  }, []);
+
+  return { notes, addNote, updateNote, deleteNote };
+}
+</file>
+
+<file path="NoteForm.tsx">
+"use client";
+
+import { FormEvent, useState } from "react";
+
+type NoteFormProps = {
+  onAdd: (text: string) => boolean;
+};
+
+export function NoteForm({ onAdd }: NoteFormProps) {
+  const [text, setText] = useState("");
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (onAdd(text)) {
+      setText("");
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3 sm:flex-row">
+      <label htmlFor="note-input" className="sr-only">
+        Текст нотатки
+      </label>
+      <input
+        id="note-input"
+        type="text"
+        value={text}
+        onChange={(event) => setText(event.target.value)}
+        placeholder="Нова нотатка..."
+        className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-500"
+      />
+      <button
+        type="submit"
+        className="rounded-lg bg-zinc-900 px-5 py-2 font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+      >
+        Додати
+      </button>
+    </form>
+  );
+}
+</file>
+
+<file path="NoteItem.tsx">
+"use client";
+
+import { useState } from "react";
+import type { Note } from "@/types/note";
+
+type NoteItemProps = {
+  note: Note;
+  onUpdate: (id: string, text: string) => boolean;
+  onDelete: (id: string) => void;
+};
+
+export function NoteItem({ note, onUpdate, onDelete }: NoteItemProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftText, setDraftText] = useState(note.text);
+
+  function startEditing() {
+    setDraftText(note.text);
+    setIsEditing(true);
+  }
+
+  function cancelEditing() {
+    setDraftText(note.text);
+    setIsEditing(false);
+  }
+
+  function saveEditing() {
+    if (onUpdate(note.id, draftText)) {
+      setIsEditing(false);
+      return;
+    }
+
+    setDraftText(note.text);
+    setIsEditing(false);
+  }
+
+  if (isEditing) {
+    return (
+      <li className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+        <label htmlFor={`edit-${note.id}`} className="sr-only">
+          Редагувати нотатку
+        </label>
+        <textarea
+          id={`edit-${note.id}`}
+          value={draftText}
+          onChange={(event) => setDraftText(event.target.value)}
+          rows={3}
+          className="mb-3 w-full resize-y rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+        />
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={saveEditing}
+            className="rounded-lg bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          >
+            Зберегти
+          </button>
+          <button
+            type="button"
+            onClick={cancelEditing}
+            className="rounded-lg border border-zinc-300 px-4 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            Скасувати
+          </button>
+        </div>
+      </li>
+    );
+  }
+
+  return (
+    <li className="flex items-start justify-between gap-4 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+      <p className="flex-1 whitespace-pre-wrap text-zinc-900 dark:text-zinc-50">
+        {note.text}
+      </p>
+      <div className="flex shrink-0 gap-2">
+        <button
+          type="button"
+          onClick={startEditing}
+          className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        >
+          Редагувати
+        </button>
+        <button
+          type="button"
+          onClick={() => onDelete(note.id)}
+          className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+        >
+          Видалити
+        </button>
+      </div>
+    </li>
+  );
+}
+</file>
+
+<file path="NoteList.tsx">
+"use client";
+
+import type { Note } from "@/types/note";
+import { NoteItem } from "@/components/NoteItem";
+
+type NoteListProps = {
+  notes: Note[];
+  onUpdate: (id: string, text: string) => boolean;
+  onDelete: (id: string) => void;
+};
+
+export function NoteList({ notes, onUpdate, onDelete }: NoteListProps) {
+  if (notes.length === 0) {
+    return (
+      <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+        Нотаток ще немає. Додайте першу вище.
+      </p>
+    );
+  }
+
+  return (
+    <ul className="flex flex-col gap-3">
+      {notes.map((note) => (
+        <NoteItem
+          key={note.id}
+          note={note}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      ))}
+    </ul>
+  );
+}
+</file>
+
+<file path="NotesApp.tsx">
+"use client";
+
+import { NoteForm } from "@/components/NoteForm";
+import { NoteList } from "@/components/NoteList";
+import { useNotes } from "@/hooks/useNotes";
+
+export function NotesApp() {
+  const { notes, addNote, updateNote, deleteNote } = useNotes();
+
+  return (
+    <div className="flex w-full flex-col gap-8">
+      <NoteForm onAdd={addNote} />
+      <NoteList notes={notes} onUpdate={updateNote} onDelete={deleteNote} />
+    </div>
+  );
+}
+</file>
+
+<file path="note.ts">
+export type Note = {
+  id: string;
+  text: string;
+  createdAt: number;
+};
+
+export const NOTES_STORAGE_KEY = "notes-app-v1";
+</file>
+
+<file path="globals.css">
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+</file>
+
+<file path="layout.tsx">
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Нотатки",
+  description: "Простий список нотаток з localStorage",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
+}
+</file>
+
+<file path="page.tsx">
+import { NotesApp } from "@/components/NotesApp";
+
+export default function Home() {
+  return (
+    <div className="flex flex-1 flex-col bg-zinc-50 font-sans dark:bg-black">
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-16">
+        <header>
+          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Нотатки
+          </h1>
+          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+            Додавайте, редагуйте та видаляйте нотатки. Дані зберігаються локально
+            у браузері.
+          </p>
+        </header>
+        <NotesApp />
+      </main>
+    </div>
+  );
+}
+</file>
+
+</files>
