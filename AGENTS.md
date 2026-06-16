@@ -2,19 +2,15 @@
 
 Baseline guidance for an Agentic IDE working in **this homework repo**.
 
-> UDC Workshop 1 homework — greenfield. Participants initialize their own small
-> project and complete Tasks 1-4. See `docs/walkthrough.md`.
+> UDC Workshop 1 homework — greenfield.
 
 ## Context
 
-- This repo starts almost empty on purpose. The participant creates a new
-  project under `app/` and writes their own `AGENTS.md` **inside that project**.
-- The homework is graded by CodeRabbit (`.coderabbit.yaml`) against the
-  Definition of Done in `docs/walkthrough.md`.
+- This repo starts almost empty on purpose. 
 
 ## Conventions
 
-- Documentation language: Ukrainian or English (participant's choice).
+- Documentation language: English.
 - Keep generated artifacts in the agreed paths so auto-review can find them:
   - `app/` — the new project
   - `.agents/skills/` — at least one installed Agent Skill (Task 1; e.g.
