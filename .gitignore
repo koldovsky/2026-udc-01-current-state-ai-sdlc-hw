@@ -10,6 +10,9 @@ out
 .next
 coverage
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 # Env / secrets — NEVER commit these
 .env
 .env.local
@@ -31,3 +34,8 @@ yarn-error.log*
 
 # Windows Git Bash safety: prevent accidental NUL device files
 nul
+
+# Agent Skills: commit the source of truth in .agents/skills/ + skills-lock.json.
+# The per-tool symlink in .claude/skills/ is a machine-local artifact
+# (absolute path, non-portable) — regenerate it with `npx skills`.
+.claude/skills/
