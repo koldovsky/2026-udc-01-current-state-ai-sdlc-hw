@@ -29,5 +29,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Playwright MCP run artifacts (browser snapshots, console logs)
+.playwright-mcp/
+
+# Repomix packs (regenerable; ~290KB of duplicated repo content)
+repomix-output.xml
+repomix-tight.xml
+
 # Windows Git Bash safety: prevent accidental NUL device files
 nul
