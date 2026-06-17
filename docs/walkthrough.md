@@ -113,11 +113,11 @@ Node 22+, GitHub account.
 
 ## Definition of Done
 
-- [ ] **Task 1:** `app/` стартує + `app/AGENTS.md` + `.cursorignore` (≥3 патерни) + встановлений Agent Skill
-- [ ] **Task 2:** фіча працює + `docs/workflow.md` (plan → agent + рев'ю)
-- [ ] **Task 3:** `docs/cost-analysis.md` з реальними числами + 2-3 висновки
+- [x] **Task 1:** `app/` стартує + `app/AGENTS.md` + `.claude/settings.json` (≥3 патерни) + встановлений Agent Skill
+- [x] **Task 2:** фіча працює + `docs/workflow.md` (plan → agent + рев'ю)
+- [x] **Task 3:** `docs/cost-analysis.md` з реальними числами + 4 висновки
 - [ ] **Task 4 (bonus):** `docs/ab-experiment.md` з обома промптами
-- [ ] Проєкт стартує без помилок
+- [x] Проєкт стартує без помилок
 
 ## Здача
 

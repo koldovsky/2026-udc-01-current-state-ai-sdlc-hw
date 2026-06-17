@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "deny": [
+      "node_modules/**",
+      "app/node_modules/**",
+      ".next/**",
+      "app/.next/**",
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      "package-lock.json",
+      "npm-shrinkwrap.json",
+      "yarn.lock",
+      "pnpm-lock.yaml",
+      ".env",
+      ".env.local",
+      ".env.*.local",
+      ".env.production.local",
+      "*.tsbuildinfo",
+      ".DS_Store",
+      "Thumbs.db",
+      "*.log",
+      "npm-debug.log*",
+      "logs/**",
+      "public/**/*.svg"
+    ]
+  }
+}
