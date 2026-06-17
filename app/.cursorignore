@@ -1,0 +1,17 @@
+# --- SENSITIVE FILES ---
+.env
+.env.local
+config/secrets.json
+*.key
+*.pem
+
+# --- DEPENDENCIES & CACHE ---
+node_modules/
+
+# --- COMPILED CODE & BUILDS ---
+dist/
+build/
+out/
++.next/
++.turbo/
++.swc/

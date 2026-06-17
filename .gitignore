@@ -31,3 +31,5 @@ yarn-error.log*
 
 # Windows Git Bash safety: prevent accidental NUL device files
 nul
+/app/.claude/skills
+/app/.claude/skills/vercel-react-best-practices

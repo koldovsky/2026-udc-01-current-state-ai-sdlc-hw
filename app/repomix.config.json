@@ -1,0 +1,7 @@
+{
+  "ignore": {
+    "customPatterns": [
+      ".agents/skills/vercel-react-best-practices/**"
+    ]
+  }
+}

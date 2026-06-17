@@ -1,0 +1,722 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
+
+# File Summary
+
+## Purpose
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+## File Format
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  a. A header with the file path (## File: path/to/file)
+  b. The full contents of the file in a code block
+
+## Usage Guidelines
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+## Notes
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: .agents/skills/vercel-react-best-practices/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+
+# Directory Structure
+```
+.claude/settings.json
+.claude/settings.local.json
+.gitignore
+AGENTS.md
+app/favicon.ico
+app/globals.css
+app/layout.tsx
+app/page.tsx
+CLAUDE.md
+components/game-score-tracker/GameScoreGrid.tsx
+components/game-score-tracker/types.ts
+components/game-score-tracker/WinScore.tsx
+docs/cost-analysis.md
+docs/workflow.md
+eslint.config.mjs
+libraries/combo-box/ComboBox.tsx
+next.config.ts
+package.json
+postcss.config.mjs
+public/file.svg
+public/globe.svg
+public/next.svg
+public/vercel.svg
+public/window.svg
+README.md
+repomix.config.json
+screenshot-script.js
+skills-lock.json
+tsconfig.json
+```
+
+# Files
+
+## File: .claude/settings.json
+````json
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./node_modules/**)",
+      "Read(./config/credentials.json)",
+      "Read(./.next/**)"
+    ]
+  }
+}
+````
+
+## File: .claude/settings.local.json
+````json
+{}
+````
+
+## File: .gitignore
+````
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+````
+
+## File: AGENTS.md
+````markdown
+# Agent.md - test project (/app folder)
+This is first draft of the agent.md file which could have small colisions and inaccuracies. 
+Fell free to change it, if you find more productive way.
+
+# Stack
+- Minumum Node.js 20.9
+- (app router) React 19
+- Minimum TypeScript version: v5.1.0
+
+## Commands
+- dev : `npm run dev`
+- test:  `npm test`
+- build: `npm run build`
+
+## Conventions
+- Follow ESLint configuration.
+- Use Prettier for formatting.
+- Place all reusable modules in a dedicated folder, e.g., "libraries", and underneath each module in its own folder, e.g., "/libraries/logger".
+- use TypeScript sparingly and thoughtfully.
+
+## Guardrails
+- do not show all suggestions, write suggestions one by one, and ask show next or not.
+- do not use any new public library.
+- use program languages which is defined in stack.
+
+when start answer use 🧠
+````
+
+## File: app/globals.css
+````css
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+````
+
+## File: app/layout.tsx
+````typescript
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-medium">{children}</body>
+    </html>
+  );
+}
+````
+
+## File: app/page.tsx
+````typescript
+'use client';
+
+import { useState, useEffect } from 'react';
+import { GameScoreGrid } from '@/components/game-score-tracker/GameScoreGrid';
+import { WinScore } from '@/components/game-score-tracker/WinScore';
+import { GameRecord, GameResult } from '@/components/game-score-tracker/types';
+
+function createEmptyRecord(): GameRecord {
+  return {
+    id: crypto.randomUUID(),
+    gameName: '',
+    durationMinutes: 0,
+    result: 'win',
+  };
+}
+
+export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  const [records, setRecords] = useState<GameRecord[]>([]);
+
+  useEffect(() => {
+    setRecords([createEmptyRecord()]);
+    setMounted(true);
+  }, []);
+
+  function handleAdd() {
+    setRecords(prev => [...prev, createEmptyRecord()]);
+  }
+
+  function handleChange(id: string, field: keyof GameRecord, value: string | number | GameResult) {
+    setRecords(prev =>
+      prev.map(r => r.id === id ? { ...r, [field]: value } : r)
+    );
+  }
+
+  function handleDelete(id: string) {
+    setRecords(prev => prev.filter(r => r.id !== id));
+  }
+
+  const filledRecords = records.filter(r => r.gameName.trim() !== '' && r.durationMinutes > 0);
+
+  return (
+    <div className="min-h-screen bg-zinc-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow p-8">
+        <h1 className="text-2xl font-bold text-zinc-900 mb-6">Game Score Tracker</h1>
+        {mounted && (
+          <>
+            <GameScoreGrid
+              records={records}
+              onAdd={handleAdd}
+              onChange={handleChange}
+              onDelete={handleDelete}
+            />
+            <WinScore records={filledRecords} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+````
+
+## File: CLAUDE.md
+````markdown
+@AGENTS.md
+````
+
+## File: components/game-score-tracker/GameScoreGrid.tsx
+````typescript
+'use client';
+
+import { ComboBox } from '@/libraries/combo-box/ComboBox';
+import { GameRecord, GameResult } from './types';
+
+const DEFAULT_GAMES = ['Chess', 'Checkers', 'Scrabble', 'Catan', 'Poker', 'Go'];
+
+interface GameScoreGridProps {
+  records: GameRecord[];
+  onAdd: () => void;
+  onChange: (id: string, field: keyof GameRecord, value: string | number | GameResult) => void;
+  onDelete: (id: string) => void;
+}
+
+export function GameScoreGrid({ records, onAdd, onChange, onDelete }: GameScoreGridProps) {
+  return (
+    <div className="w-full">
+      <table className="w-full border-collapse text-sm">
+        <thead>
+          <tr className="bg-zinc-100 text-zinc-600 text-left">
+            <th className="border border-zinc-300 px-3 py-2 font-medium">Game Name</th>
+            <th className="border border-zinc-300 px-3 py-2 font-medium w-32">Duration (min)</th>
+            <th className="border border-zinc-300 px-3 py-2 font-medium w-44">Result</th>
+            <th className="border border-zinc-300 px-3 py-2 w-10"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {records.map((record, index) => {
+            const nameInvalid = record.gameName.trim() === '';
+            const durationInvalid = record.durationMinutes <= 0;
+            return (
+              <tr key={record.id} className={index % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}>
+                <td className="border border-zinc-300 px-2 py-1">
+                  <ComboBox
+                    id={`game-name-${record.id}`}
+                    options={DEFAULT_GAMES}
+                    value={record.gameName}
+                    onChange={val => onChange(record.id, 'gameName', val)}
+                    placeholder="Select or type..."
+                  />
+                  {nameInvalid && record.gameName !== '' && (
+                    <p className="text-red-500 text-xs mt-0.5">Name is required</p>
+                  )}
+                </td>
+                <td className="border border-zinc-300 px-2 py-1">
+                  <input
+                    type="number"
+                    min={1}
+                    value={record.durationMinutes || ''}
+                    onChange={e => onChange(record.id, 'durationMinutes', Number(e.target.value))}
+                    placeholder="0"
+                    className={`w-full border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 ${durationInvalid ? 'border-red-400' : 'border-zinc-300'}`}
+                  />
+                </td>
+                <td className="border border-zinc-300 px-3 py-1">
+                  <label className="flex items-center gap-1 cursor-pointer inline-flex mr-4">
+                    <input
+                      type="radio"
+                      name={`result-${record.id}`}
+                      checked={record.result === 'win'}
+                      onChange={() => onChange(record.id, 'result', 'win')}
+                    />
+                    <span>Win</span>
+                  </label>
+                  <label className="flex items-center gap-1 cursor-pointer inline-flex">
+                    <input
+                      type="radio"
+                      name={`result-${record.id}`}
+                      checked={record.result === 'lose'}
+                      onChange={() => onChange(record.id, 'result', 'lose')}
+                    />
+                    <span>Lose</span>
+                  </label>
+                </td>
+                <td className="border border-zinc-300 px-2 py-1 text-center">
+                  <button
+                    onClick={() => onDelete(record.id)}
+                    className="text-zinc-400 hover:text-red-500 font-bold text-base leading-none"
+                    aria-label="Delete row"
+                  >
+                    ×
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <button
+        onClick={onAdd}
+        className="mt-3 px-4 py-1.5 text-sm border border-zinc-300 rounded hover:bg-zinc-100 transition-colors text-zinc-700"
+      >
+        + Add Row
+      </button>
+    </div>
+  );
+}
+````
+
+## File: components/game-score-tracker/types.ts
+````typescript
+export type GameResult = "win" | "lose";
+
+export interface GameRecord {
+  id: string;
+  gameName: string;
+  durationMinutes: number;
+  result: GameResult;
+}
+````
+
+## File: components/game-score-tracker/WinScore.tsx
+````typescript
+import { GameRecord } from './types';
+
+interface WinScoreProps {
+  records: GameRecord[];
+}
+
+export function WinScore({ records }: WinScoreProps) {
+  if (records.length === 0) {
+    return (
+      <div className="mt-6 p-4 bg-zinc-50 rounded-xl text-center text-zinc-400 text-sm">
+        Add records to see your win score.
+      </div>
+    );
+  }
+
+  const winCount = records.filter(r => r.result === 'win').length;
+  const score = Math.round((winCount / records.length) * 100);
+
+  return (
+    <div className="mt-6 p-4 bg-zinc-50 rounded-xl text-center">
+      <span className="text-zinc-500 text-sm">Win Score</span>
+      <p className="text-4xl font-bold text-zinc-900 mt-1">{score}%</p>
+      <p className="text-zinc-400 text-xs mt-1">{winCount} win{winCount !== 1 ? 's' : ''} out of {records.length} record{records.length !== 1 ? 's' : ''}</p>
+    </div>
+  );
+}
+````
+
+## File: docs/cost-analysis.md
+````markdown
+
+````
+
+## File: docs/workflow.md
+````markdown
+# Task 2. New feature, Games Score Form.
+
+The form provides posibillity count win rate of games based on user information.
+
+# Acceptance criteria
+ - [x] Form should have fields: Game Name, game duration, game result.
+ - [x] Game name should be drop down list, which could be extended by typed info.
+ - [x] game result should be Win/Lose.
+ - [x] in the end of form should be displayed win score, it is calcluted as: Records with Win /Number of Records *100.
+ - [x] User can add more than 1 records.
+
+Plan mode:
+Згідно заданих критеріїв, попросив зробити план та створити опис форми в ANSII для перегляду. 
+
+Що скоригував після рев'ю плану
+Після ревю скоригував папки де буде зберігатись компонент, оскільки він хотів зберегти все в library. Також, було запропоновано додавання нового запису як окрема форма, я зробив додавання в grid.
+
+Agent mode
+Після імплементації, на формі були присутні помилки в гріді, знадобилось 3 ітерації щоб він їх усунув.
+````
+
+## File: eslint.config.mjs
+````javascript
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+````
+
+## File: libraries/combo-box/ComboBox.tsx
+````typescript
+'use client';
+
+interface ComboBoxProps {
+  id: string;
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}
+
+export function ComboBox({ id, options, value, onChange, placeholder }: ComboBoxProps) {
+  const listId = `${id}-list`;
+  return (
+    <>
+      <input
+        id={id}
+        type="text"
+        list={listId}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full border border-zinc-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
+      />
+      <datalist id={listId}>
+        {options.map(opt => <option key={opt} value={opt} />)}
+      </datalist>
+    </>
+  );
+}
+````
+
+## File: next.config.ts
+````typescript
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+````
+
+## File: package.json
+````json
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+````
+
+## File: postcss.config.mjs
+````javascript
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+````
+
+## File: public/file.svg
+````xml
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+````
+
+## File: public/globe.svg
+````xml
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+````
+
+## File: public/next.svg
+````xml
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+````
+
+## File: public/vercel.svg
+````xml
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+````
+
+## File: public/window.svg
+````xml
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+````
+
+## File: README.md
+````markdown
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+````
+
+## File: repomix.config.json
+````json
+{
+  "ignore": {
+    "customPatterns": [
+      ".agents/skills/vercel-react-best-practices/**"
+    ]
+  }
+}
+````
+
+## File: screenshot-script.js
+````javascript
+const { chromium } = require('playwright');
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+  await page.screenshot({ path: 'screenshot.png', fullPage: true });
+  await browser.close();
+  console.log('done');
+})();
+````
+
+## File: skills-lock.json
+````json
+{
+  "version": 1,
+  "skills": {
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+    }
+  }
+}
+````
+
+## File: tsconfig.json
+````json
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+````
