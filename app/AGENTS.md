@@ -29,4 +29,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - Use `npm test` from the `app/` folder to run unit tests.
 - The project uses Vitest for lightweight unit test execution.
+
+## Commands
+
+All commands run from the `app/` directory.
+
+- **`npm run dev`** — Start the development server (http://localhost:3000).
+- **`npm run build`** — Build the app for production.
+- **`npm start`** — Start the production server (after `npm run build`).
+- **`npm test`** — Run unit tests with Vitest.
+- **`npm run lint`** — Run linting checks.
 <!-- END:nextjs-agent-rules -->
