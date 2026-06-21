@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./node_modules/**)",
+      "Read(./app/node_modules/**)",
+      "Read(./.next/**)",
+      "Read(./app/.next/**)",
+      "Read(./**/dist/**)",
+      "Read(./**/build/**)",
+      "Read(./**/*.env*)",
+      "Read(./**/package-lock.json)"
+    ]
+  }
+}
