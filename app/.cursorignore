@@ -1,0 +1,13 @@
+# secrets
+.env*
+
+# dependencies
+node_modules/
+
+# build output
+.next/
+out/
+build/
+
+# lockfile (large, rarely hand-edited)
+package-lock.json
