@@ -1,0 +1,22 @@
+# Keep heavy / secret / generated artifacts out of the AI context.
+# gitignore-style patterns, applied recursively (any depth).
+
+# Dependencies
+**/node_modules/
+
+# Next.js builds and other build output
+**/.next/
+**/out/
+**/build/
+
+# Lock files (huge, useless to the model)
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# Secrets and environment
+.env*
+**/.env*
+
+# TypeScript build info
+**/*.tsbuildinfo
