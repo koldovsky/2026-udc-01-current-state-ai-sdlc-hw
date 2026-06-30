@@ -1,0 +1,54 @@
+.key {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+  border-radius: 0 0 6px 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 60ms;
+  border: none;
+  outline: none;
+}
+
+.white {
+  width: 52px;
+  height: 180px;
+  background: #fff;
+  border: 1px solid #bbb;
+  color: #555;
+  z-index: 1;
+}
+
+.white:hover {
+  background: #f0f0f0;
+}
+
+.black {
+  width: 34px;
+  height: 112px;
+  background: #222;
+  color: #aaa;
+  z-index: 2;
+}
+
+.black:hover {
+  background: #333;
+}
+
+.white.active {
+  background: #ffe4e1;
+  border-color: #e53e3e;
+}
+
+.black.active {
+  background: #9b2c2c;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  pointer-events: none;
+}
