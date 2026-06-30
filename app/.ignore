@@ -1,0 +1,18 @@
+# Keep these out of Claude Code's file context (Glob, file picker, @ mentions)
+
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment secrets
+.env
+.env.*
