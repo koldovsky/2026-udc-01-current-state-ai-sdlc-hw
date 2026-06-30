@@ -88,4 +88,39 @@ payoff of structure is **alignment and fewer follow-up iterations**, not just ra
 quality. The bigger and fuzzier the task, the larger that payoff.
 
 > Note: both implementations were built in throwaway copies of the app purely to
-> run the experiment; the project's `app/` was not modified by this task.
+> run the experiment; the project's `app/` was not modified by this task. The
+> copies themselves are not committed, so the raw agent reports and measured
+> usage are reproduced below as the source of the metrics table.
+
+## Appendix — raw agent reports (source of the metrics)
+
+The two runs were executed as separate agents in parallel; each returned a
+structured self-report. The measured usage (tokens / tool calls / duration) comes
+from the run harness.
+
+### Run A — basic prompt
+
+- **Measured usage:** 31,791 tokens · 17 tool calls · ~176 s.
+- Files: created `app/lib/passwordStrength.ts`, `app/lib/passwordStrength.test.ts`;
+  modified `app/components/SignupForm.tsx`.
+- Pure tested function: yes (`passwordStrength()` in `app/lib/passwordStrength.ts`).
+- Tests: 20 pass (7 new + 13 existing); type-check clean; lint clean.
+- Assumptions (because the task was underspecified): invented a 0–4 scale
+  (Very weak…Strong), reused `PASSWORD_MIN_LENGTH` and chose 12 as the "strong"
+  length, showed the indicator only for non-empty input, made it purely
+  presentational (does not gate submission).
+- Edit→run cycles: ~1.
+
+### Run B — structured prompt
+
+- **Measured usage:** 32,968 tokens · 14 tool calls · ~216 s.
+- Files: created `app/lib/passwordStrength.ts`, `app/lib/passwordStrength.test.ts`;
+  modified `app/components/SignupForm.tsx`.
+- Pure tested function: yes (`getPasswordStrength()` + `countCharacterClasses()`).
+- Tests: 23 pass (10 new + 13 existing); type-check clean (strict, no `any`);
+  lint clean.
+- Assumptions (bounded by the given constraints): 0–3 ladder Too weak/Weak/
+  Medium/Strong; thresholds derived from `PASSWORD_MIN_LENGTH` and character-class
+  count; 3-segment bar `aria-hidden`, label as the accessible name, `role="status"`
+  / `aria-live="polite"` container always mounted.
+- Edit→run cycles: 1.

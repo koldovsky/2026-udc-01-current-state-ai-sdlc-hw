@@ -28,7 +28,7 @@ export function validateEmail(email: string): string | null {
 
 /** Validate the password. Returns an error message or null. */
 export function validatePassword(password: string): string | null {
-  if (password.length === 0) return "Password is required";
+  if (password.trim().length === 0) return "Password is required";
   if (password.length < PASSWORD_MIN_LENGTH) {
     return `At least ${PASSWORD_MIN_LENGTH} characters`;
   }

@@ -8,7 +8,10 @@
       "Read(./app/build/**)",
       "Read(./app/package-lock.json)",
       "Read(**/.env)",
-      "Read(**/.env.*)"
+      "Read(**/.env.*)",
+      "Write(**/.env)",
+      "Write(**/.env.*)",
+      "Write(./app/node_modules/**)"
     ]
   }
 }

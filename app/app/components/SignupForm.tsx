@@ -7,10 +7,10 @@ import {
   type FormValues,
 } from "../lib/validation";
 
-const EMPTY: FormValues = { email: "", password: "" };
+const emptyValues: FormValues = { email: "", password: "" };
 
 export default function SignupForm() {
-  const [values, setValues] = useState<FormValues>(EMPTY);
+  const [values, setValues] = useState<FormValues>(emptyValues);
   // submitted = whether a submit was attempted; errors stay hidden until then.
   const [submitted, setSubmitted] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
@@ -28,9 +28,10 @@ export default function SignupForm() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitted(true);
+    setRegisteredEmail(null); // clear any prior success message before re-validating
     if (!isFormValid(errors)) return; // invalid — submission is blocked
     setRegisteredEmail(values.email.trim());
-    setValues(EMPTY);
+    setValues(emptyValues);
     setSubmitted(false);
   }
 

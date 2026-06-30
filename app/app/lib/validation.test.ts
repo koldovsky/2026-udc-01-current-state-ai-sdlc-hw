@@ -36,6 +36,7 @@ describe("validatePassword", () => {
 
   it("requires a non-empty value", () => {
     expect(validatePassword("")).toBe("Password is required");
+    expect(validatePassword("        ")).toBe("Password is required");
   });
 
   it("rejects a too-short password", () => {
