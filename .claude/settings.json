@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(task.md)",
+      "Edit(task.md)",
+      "Read(app/node_modules/**)",
+      "Edit(app/node_modules/**)",
+      "Read(app/.next/**)",
+      "Edit(app/.next/**)",
+      "Read(app/package-lock.json)",
+      "Edit(app/package-lock.json)"
+    ]
+  }
+}

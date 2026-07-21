@@ -14,7 +14,7 @@ Baseline guidance for an Agentic IDE working in **this homework repo**.
 
 ## Conventions
 
-- Documentation language: Ukrainian or English (participant's choice).
+- Documentation language: English.
 - Keep generated artifacts in the agreed paths so auto-review can find them:
   - `app/` — the new project
   - `.agents/skills/` — at least one installed Agent Skill (Task 1; e.g.
