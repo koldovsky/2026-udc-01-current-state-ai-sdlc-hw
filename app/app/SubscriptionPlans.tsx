@@ -1,17 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { PlanCard } from "./PlanCard";
-import { BENEFITS, PLANS, type Plan } from "./plans";
+import { useEffect, useRef, useState } from "react";
+import { PlanCard } from "@/components/PlanCard";
+import { BENEFITS, PLANS, type Plan } from "@/components/plans";
 
 export function SubscriptionPlans() {
   const [activePlan, setActivePlan] = useState<Plan | null>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const isInitialRender = useRef(true);
+
+  // Move focus to the heading of the newly rendered state whenever we switch
+  // between the Selection and Active views, so keyboard and screen-reader users
+  // land on the new content instead of a detached position. Skip the very first
+  // render so we don't steal focus on initial page load.
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    headingRef.current?.focus();
+  }, [activePlan]);
 
   if (activePlan) {
     return (
       <div className="flex w-full flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
+          <h1
+            ref={headingRef}
+            tabIndex={-1}
+            className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50"
+          >
             You&apos;re Premium!
           </h1>
           <p className="text-zinc-600 dark:text-zinc-400">
@@ -61,7 +79,11 @@ export function SubscriptionPlans() {
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50"
+        >
           Upgrade to Premium
         </h1>
         <p className="text-zinc-600 dark:text-zinc-400">
@@ -90,9 +112,11 @@ export function SubscriptionPlans() {
       <div className="flex flex-col gap-2">
         <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
           Payment will be charged to your account upon confirmation of purchase.
-          Your subscription automatically renews unless canceled at least 24
-          hours before the end of the current billing period. You can manage or
-          cancel your subscription at any time in your account settings.
+          Monthly and Annual subscriptions automatically renew unless canceled
+          at least 24 hours before the end of the current billing period; the
+          Lifetime plan is a one-time purchase and does not renew. You can
+          manage or cancel your subscription at any time in your account
+          settings.
         </p>
         <div className="flex gap-4 text-xs">
           <a

@@ -1,4 +1,4 @@
-import { SubscriptionPlans } from "@/components/SubscriptionPlans";
+import { SubscriptionPlans } from "./SubscriptionPlans";
 
 export default function Home() {
   return (

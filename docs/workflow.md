@@ -55,12 +55,15 @@ Once the plan was approved, implementation followed it directly:
 
 1. Created `app/components/PlanCard.tsx` — stateless presentational
    component for one plan button (name, price, billing period, optional
-   "Best Value" badge).
-2. Created `app/components/SubscriptionPlans.tsx` — the stateful
-   container (`"use client"`): holds the `Plan` type, the static 3-item
-   `plans` array, a single `useState<Plan | null>` driving both which
-   view renders and what data the Active view shows, and both the
-   Selection and Active view markup.
+   "Best Value" badge); imports the `Plan` type from
+   `app/components/plans.ts`.
+2. Created `app/app/SubscriptionPlans.tsx` — the stateful container
+   (`"use client"`) co-located with the root route. It imports the `Plan`
+   type and the static `PLANS` and `BENEFITS` data from
+   `app/components/plans.ts` (rather than defining them inline), and holds
+   a single `useState<Plan | null>` driving both which view renders and
+   what data the Active view shows, plus both the Selection and Active
+   view markup.
 3. Rewrote `app/app/page.tsx` to remove the starter boilerplate (Next.js
    logo, Deploy Now / Documentation links) and render
    `<SubscriptionPlans />` inside the existing centered card shell.

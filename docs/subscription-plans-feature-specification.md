@@ -57,9 +57,10 @@ Selecting any plan simulates a successful subscription purchase.
 Display the following text:
 
 > Payment will be charged to your account upon confirmation of purchase.
-> Your subscription automatically renews unless canceled at least 24
-> hours before the end of the current billing period. You can manage or
-> cancel your subscription at any time in your account settings.
+> Monthly and Annual subscriptions automatically renew unless canceled at
+> least 24 hours before the end of the current billing period; the
+> Lifetime plan is a one-time purchase and does not renew. You can manage
+> or cancel your subscription at any time in your account settings.
 
 Display two links below:
 

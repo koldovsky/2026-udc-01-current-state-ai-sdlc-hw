@@ -9,6 +9,9 @@ dist/
 build/
 out/
 
+# coverage
+coverage/
+
 # lockfiles
 package-lock.json
 yarn.lock
