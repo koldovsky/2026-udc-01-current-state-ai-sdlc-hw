@@ -1,0 +1,21 @@
+# Keep heavy/generated/sensitive paths out of the AI context.
+
+# dependencies
+node_modules/
+
+# builds
+.next/
+dist/
+build/
+out/
+
+# coverage
+coverage/
+
+# lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# secrets
+.env*
