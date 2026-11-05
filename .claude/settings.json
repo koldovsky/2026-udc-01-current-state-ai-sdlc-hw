@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/node_modules/[a-mo-z0-9@._-]*/**)",
+      "Read(**/node_modules/n[a-df-z0-9._-]*/**)",
+      "Read(**/node_modules/ne[a-wyz0-9._-]*/**)",
+      "Read(**/node_modules/nex[a-su-z0-9._-]*/**)",
+      "Read(**/node_modules/next[a-z0-9._-]*/**)",
+      "Read(**/node_modules/.package-lock.json)",
+      "Read(**/node_modules/next/[a-ce-z0-9._-]*)",
+      "Read(**/node_modules/next/[a-ce-z0-9._-]*/**)",
+      "Read(**/node_modules/next/d[a-hj-z0-9._-]*)",
+      "Read(**/node_modules/next/dist/[a-ce-z0-9._-]*)",
+      "Read(**/node_modules/next/dist/[a-ce-z0-9._-]*/**)",
+      "Read(**/node_modules/next/dist/d[a-np-z0-9._-]*)",
+      "Read(**/node_modules/next/dist/d[a-np-z0-9._-]*/**)",
+      "Read(**/.next/**)",
+      "Read(/app/dist/**)",
+      "Read(/app/build/**)",
+      "Read(/app/out/**)",
+      "Read(/app/coverage/**)",
+      "Read(**/package-lock.json)",
+      "Read(**/yarn.lock)",
+      "Read(**/pnpm-lock.yaml)",
+      "Read(**/.env)",
+      "Read(**/.env.*)"
+    ]
+  }
+}

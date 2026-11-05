@@ -1,0 +1,10 @@
+import NotesList from "@/components/NotesList";
+
+export default function Home() {
+  return (
+    <main className="mx-auto flex w-full max-w-xl flex-col gap-8 px-6 py-16">
+      <h1 className="text-3xl font-semibold tracking-tight">Нотатки</h1>
+      <NotesList />
+    </main>
+  );
+}
